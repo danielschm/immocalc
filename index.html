@@ -1,0 +1,245 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>immocalc</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="script.js"></script>
+    <script src="https://unpkg.com/autonumeric"></script>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo"></div>
+    <div class="title">Der Immorechner</div>
+    <div class="reset">
+        <button title="Zurücksetzen" onclick="reset()">Zurücksetzen</button>
+    </div>
+</div>
+
+
+<div class="wrapper">
+    <div class="calculator">
+        <div class="section">
+            <div class="element">
+                <div class="label">Wohnfläche</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>m²</span></div>
+                        <input step="0.01" id="__input_squareMeter">
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Kaufpreis</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_listPrice">
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Kaufpreis / m²</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_pricePerSquareMeter" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="element">
+                <div class="label">Nebenkosten Makler</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>%</span></div>
+                        <input step="0.01" id="__input_addCostsAgentPercentage">
+                    </div>
+                    <div class="seperator"></div>
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_addCostsAgent" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Nebenkosten Notar</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>%</span></div>
+                        <input step="0.01" id="__input_addCostsNotaryPercentage">
+                    </div>
+                    <div class="seperator"></div>
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_addCostsNotary" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Nebenkosten Grunderwerbsteuer</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>%</span></div>
+                        <input step="0.01" id="__input_addCostsRealEstateTaxesPercentage">
+                    </div>
+                    <div class="seperator"></div>
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_addCostsRealEstateTaxes"
+                               tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="element">
+                <div class="label">Gesamtkosten</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_totalCost" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="element">
+                <div class="label">Eigenkapital (mind. 10%)</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_equity">
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Fremdkapital / Finanzierung</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_borrowing" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Zinssatz</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>%</span></div>
+                        <input step="0.01" id="__input_interestPercentage">
+                    </div>
+                    <div class="seperator"></div>
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_interest" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Tilgung</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>%</span></div>
+                        <input step="0.01" id="__input_repaymentPercentage">
+                    </div>
+                    <div class="seperator"></div>
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_repayment" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="element">
+                <div class="label">Miete monatlich</div>
+                <div class="input block">
+                    <div class="input-wrapper">
+                        <div class="slide-container">
+                            <input type="range" min="0" max="7000" value="" class="slider" id="__slider_rentalFeeMonth" oninput="inputRentalFee()">
+                        </div>
+                    </div>
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_rentalFeeMonth">
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Miete jährlich</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_rentalFeeYear" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="element">
+                <div class="label">Nicht umlagefähige Kosten</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_notMovableCosts">
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">AFA</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>%</span></div>
+                        <input step="0.01" id="__input_afaPercentage">
+                    </div>
+                    <div class="seperator"></div>
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_afa" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Steuersatz</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>%</span></div>
+                        <input step="0.01" id="__input_taxRatePercentage">
+                    </div>
+                    <div class="seperator"></div>
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_taxRate" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="element">
+                <div class="label">Liquiditätsüberschuss</div>
+                <div class="input">
+                    <div class=input-wrapper>
+                        <div class="currency"><span>€</span></div>
+                        <input step="0.01" id="__input_liquidityExcess" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="element">
+                <div class="label">Gesamtrendite</div>
+                <div class="input">
+                    <div class="input-wrapper" id="returnOnCapital">
+                        <div class="currency"><span>%</span></div>
+                        <input step="0.01" id="__input_returnOnCapital" tabIndex="-1" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
