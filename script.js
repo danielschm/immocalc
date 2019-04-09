@@ -18,6 +18,8 @@ class Scenario {
         this.addCostsNotary = parseFloat(obj.addCostsNotary) || 0;
         this.addCostsRealEstateTaxesPercentage = parseFloat(obj.addCostsRealEstateTaxesPercentage) || 0;
         this.addCostsRealEstateTaxes = parseFloat(obj.addCostsRealEstateTaxes) || 0;
+        this.modernizationCosts = parseFloat(obj.modernizationCosts) || 0;
+        this.renovationCosts = parseFloat(obj.renovationCosts) || 0;
         this.totalCost = parseFloat(obj.totalCost) || 0;
         this.equity = parseFloat(obj.equity) || 0;
         this.equitySuggestion = parseFloat(obj.equitySuggestion) || 0;
@@ -29,6 +31,7 @@ class Scenario {
         this.rentalFeeMonth = parseFloat(obj.rentalFeeMonth) || 0;
         this.rentalFeeYear = parseFloat(obj.rentalFeeYear) || 0;
         this.notMovableCosts = parseFloat(obj.notMovableCosts) || 0;
+        this.investementReserves = parseFloat(obj.investementReserves) || 0;
         this.afaPercentage = parseFloat(obj.afaPercentage) || 0;
         this.afa = parseFloat(obj.afa) || 0;
         this.taxRatePercentage = parseFloat(obj.taxRatePercentage) || 0;
@@ -42,11 +45,14 @@ class Scenario {
             "addCostsAgentPercentage",
             "addCostsNotaryPercentage",
             "addCostsRealEstateTaxesPercentage",
+            "modernizationCosts",
+            "renovationCosts",
             "equity",
             "interestPercentage",
             "repaymentPercentage",
             "rentalFeeMonth",
             "notMovableCosts",
+            "investmentReserves",
             "afaPercentage",
             "taxRatePercentage"
         ];
@@ -132,23 +138,35 @@ class Scenario {
             document.getElementById("__slider_rentalFeeMonth").value = this.rentalFeeMonth;
         }
 
-        this.updateReturnIndicator();
+        [{
+            id: "liquidityExcess",
+            range: 0
+        }, {
+            id: "returnOnCapital",
+            range: 5
+        }].forEach(({id, range}) => {
+            const el = document.getElementById("__input_" + id);
+            this.updateInputValueState(id, el, range);
+        });
+
         this.saveObj();
     }
 
-    updateReturnIndicator() {
-        const el = document.getElementById("returnOnCapital");
+    updateInputValueState(id, el, range) {
+        const wrapper = document.getElementById(id);
         ["positive", "negative", "neutral"].forEach(e => {
-            el.classList.remove(e)
+            wrapper.classList.remove(e)
         });
-        if (this.returnOnCapital > 0) {
-            if (this.returnOnCapital > 3) {
-                el.classList.add("positive");
+
+        const value = window.autoNumericGlobalList.get(el).getNumber();
+        if (value > 0) {
+            if (value > range) {
+                wrapper.classList.add("positive");
             } else {
-                el.classList.add("neutral");
+                wrapper.classList.add("neutral");
             }
-        } else if (this.returnOnCapital < 0) {
-            el.classList.add("negative");
+        } else if (value < 0) {
+            wrapper.classList.add("negative");
         }
     }
 
@@ -167,16 +185,16 @@ class Scenario {
         this.addCostsAgent = this.addCostsAgentPercentage / 100 * this.listPrice;
         this.addCostsNotary = this.addCostsNotaryPercentage / 100 * this.listPrice;
         this.addCostsRealEstateTaxes = this.addCostsRealEstateTaxesPercentage / 100 * this.listPrice;
-        this.totalCost = this.listPrice + this.addCostsAgent + this.addCostsNotary + this.addCostsRealEstateTaxes;
+        this.totalCost = this.listPrice + this.addCostsAgent + this.addCostsNotary + this.addCostsRealEstateTaxes + this.modernizationCosts + this.renovationCosts;
         this.equitySuggestion = this.totalCost * 0.1;
         this.borrowing = this.totalCost - this.equity;
         this.interest = this.interestPercentage / 100 * this.borrowing;
         this.repayment = this.repaymentPercentage / 100 * this.borrowing;
         this.rentalFeeYear = this.rentalFeeMonth * 12;
         this.afa = this.afaPercentage / 100 * this.listPrice;
-        this.taxRate = this.taxRatePercentage / 100 * (this.rentalFeeYear - this.afa - this.interest - this.notMovableCosts);
-        this.liquidityExcess = this.rentalFeeYear - this.afa - this.interest - this.notMovableCosts - this.repayment - this.taxRate;
-        this.returnOnCapital = this.equity ? 100 * (this.liquidityExcess / this.equity) : 0;
+        this.taxRate = this.taxRatePercentage / 100 * (this.rentalFeeYear - this.afa - this.interest - this.notMovableCosts - this.investmentReserves);
+        this.liquidityExcess = this.rentalFeeYear - this.interest - this.notMovableCosts - this.investmentReserves - this.repayment - this.taxRate;
+        this.returnOnCapital = this.equity ? 100 * ((this.liquidityExcess + this.repayment) / this.equity) : 0;
     }
 
     inputRentalFee() {

@@ -83,15 +83,39 @@ button:hover {
 
 .calculator {
     padding-top: 0.5rem;
-    width: 70%;
+    width: 90%;
     height: calc(100% - 3.5rem);
     overflow: auto;
-    max-width: 40rem;
+    max-width: 80rem;
     min-width: 300px;
 }
 
+@media only screen and (max-width: 750px) {
+    .calculator .container {
+        display: block !important;
+    }
+}
+
+.calculator .container {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.calculator .title {
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.calculator .container .seperator {
+    width: 1rem;
+}
+
 .calculator .section {
-    padding: 0 0 1.5rem 0;
+    flex: 1 1 0;
 }
 
 .calculator .section .element {
@@ -120,7 +144,7 @@ button:hover {
     width: 0.2rem;
 }
 
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 1200px) {
     .calculator .section .element .input {
         display: block !important;
     }
